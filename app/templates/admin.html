@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpg" href="{% static 'photos/College_Logo.jpg' %}">
+  <title>Let's Progress | Dashboard</title>
+
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    nav {
+      width: 100%;
+      background: #fff;
+      /* White background */
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 25px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      /* subtle shadow */
+    }
+
+    /* Logo + Company */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      height: 45px;
+      width: auto;
+    }
+
+    .brand span {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: black;
+      letter-spacing: 0.5px;
+    }
+
+    .brand #blue {
+      color: #096afc;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-left: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1rem;
+      transition: 0.3s;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    .nav-links a:hover {
+      background: #f2f2f2;
+      color: #007bff;
+    }
+
+    /* Profile */
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-left: 25px;
+      transition: 0.3s;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .profile i {
+      font-size: 1.5rem;
+      margin-right: 8px;
+    }
+
+    
+        .logout-btn {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: normal;
+            opacity: 0.8;
+            border: 1px solid #ddd;
+            padding: 5px 12px;
+            border-radius: 5px;
+            margin-left: 20px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #f9f9f9;
+            color: #444;
+            opacity: 1;
+        }
+
+    /* Hamburger */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #333;
+    }
+
+    /* Active tab */
+    .nav-links a.active {
+      color: #007bff;
+      font-weight: 600;
+      border-bottom: 2px solid #007bff;
+      background: #f2f2f2;
+    }
+
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 65px;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        width: 220px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links li {
+        margin: 15px 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+    
+    body {
+      background: #f4f7fc;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      color: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+
+    .card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .card .value {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    /* Gradient Backgrounds */
+    .blue {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .green {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .orange {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .red {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <!-- Logo + Company Name -->
+    <div class="brand">
+      <img src="{% static 'photos/College_Logo.jpg' %}" alt="Logo">
+      <span id="blue">Let's </span><span>Progress</span>
+    </div>
+
+    <!-- Hamburger -->
+    <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+      ☰
+    </div>
+
+    <!-- Nav Links -->
+    <ul class="nav-links">
+      <li><a href="#" class="active">Dashboard</a></li>
+      <li><a href="/admin-dashboard/student/">Student</a></li>
+      <li><a href="/admin-dashboard/staff/">Staff</a></li>
+      <li><a href="/admin-dashboard/subject/">Subject</a></li>
+      <li><a href="/admin-dashboard/mark-entry/">Mark Entry</a></li>
+      <li>
+        <div class="profile">
+          <i class="bi bi-person-circle"></i>
+          <span>{{user.first_name}} {{user.last_name}}</span>
+        </div>
+      </li>
+      <li><a href="/logout/" class="logout-btn">Logout</a></li>
+    </ul>
+  </nav>
+  <div class="container">
+    <div class="dashboard">
+      <!-- Total Students -->
+      <div class="card blue">
+        <h3>Total Students</h3>
+        <i class="fa-solid fa-graduation-cap"></i>
+        <div class="value" data-target="{{tot_stu}}">0</div>
+      </div>
+
+      <!-- Total Teachers -->
+      <div class="card green">
+        <h3>Total Teachers</h3>
+        <i class="fa-solid fa-user-tie"></i>
+        <div class="value" data-target="{{tot_staff}}">0</div>
+      </div>
+
+      <!-- Male Students -->
+      <div class="card orange">
+        <h3>Male Students</h3>
+        <i class="fa-solid fa-person"></i>
+        <div class="value" data-target="{{tot_male}}">0</div>
+      </div>
+
+      <!-- Female Students -->
+      <div class="card red">
+        <h3>Female Students</h3>
+        <i class="fa-solid fa-person-dress"></i>
+        <div class="value" data-target="{{tot_female}}">0</div>
+      </div>
+    </div>
+  </div>
+    <script>
+  // Count-up animation
+  const counters = document.querySelectorAll('.value');
+  const speed =250; // Lower = faster
+
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText.replace(/,/g, "");
+      const increment = Math.ceil(target / speed);
+
+      if (count < target) {
+        counter.innerText = (count + increment).toLocaleString();
+        setTimeout(updateCount, 20);
+      } else {
+        counter.innerText = target.toLocaleString();
+      }
+    };
+    updateCount();
+  });
+</script>
+
+</body>
+
+</html>

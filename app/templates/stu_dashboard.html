@@ -1,0 +1,599 @@
+{% extends "common.html" %}
+{% load static %}
+
+{% block style %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<style>
+  .dashboard {
+    margin: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    padding: 25px;
+    border-radius: 15px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+
+  .card i {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+  }
+
+  .card h3 {
+    font-size: 1.6rem;
+    margin: 5px 0;
+  }
+
+  .card .value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+
+  /* Card Colors */
+  .pass {
+    background: linear-gradient(135deg, #28a745, #218838);
+  }
+
+  .fail-subject {
+    background: linear-gradient(135deg, #dc3545, #bd2130);
+  }
+
+  .percentage {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+  }
+
+  .cgpa {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+  }
+
+  .container {
+    margin: 30px auto;
+    max-width: 1000px;
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2d6cdf;
+    font-size: 28px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  thead {
+    background: #2d6cdf;
+    color: #fff;
+  }
+
+  th,
+  td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+  }
+
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  td:nth-child(2) {
+    text-align: left;
+  }
+
+  /* Badge for Top 3 S.No */
+  .rank-badge {
+    display: inline-block;
+    padding: 4px;
+    border-radius: 50%;
+    font-weight: bold;
+    color: #fff;
+    min-width: 28px;
+  }
+
+  .gold {
+    background: gold;
+    color: #000;
+  }
+
+  .silver {
+    background: silver;
+    color: #000;
+  }
+
+  .bronze {
+    background: #cd7f32;
+    color: #fff;
+  }
+
+  /* Result Badge */
+  .badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+  }
+
+  .result-pass {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  .result-fail {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 768px) {
+    table {
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+    }
+  }
+
+  .summary-chart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .results {
+    flex: 1;
+    font-size: 20px;
+    padding: 20px;
+    color: #333;
+  }
+
+  .result-box {
+    background: #e3f2fd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 8px solid #2196F3;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  .result-box span {
+    font-weight: bold;
+    font-size: 24px;
+    color: #0d47a1;
+  }
+
+  .doughnut-chart {
+    max-width: 400px;
+    height: 300px !important;
+  }
+
+
+  #fail-heading {
+    text-align: center;
+    color: #b71c1c;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  /* Container using your existing .fail class */
+  .fail {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 6px 20px rgba(183, 28, 28, 0.25);
+  }
+
+  .fail-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  .fail-table thead {
+    background: linear-gradient(90deg, #b71c1c, #e53935);
+    color: #fff;
+  }
+
+  .fail-table th,
+  .fail-table td {
+    padding: 15px 18px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .fail-table th {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .fail-table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .fail-table tbody tr:hover {
+    background: #ffebee;
+    transform: scale(1.01);
+  }
+
+  .mark-fail {
+    color: #d32f2f;
+    font-weight: bold;
+  }
+
+  .total {
+    font-weight: bold;
+  }
+
+  .fail-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .fail-subject-container {
+    background: #fff5f5;
+    padding: 40px;
+    color: #333;
+  }
+
+  @media (max-width: 768px) {
+    .fail-table {
+      font-size: 14px;
+    }
+
+    .fail-table th,
+    .fail-table td {
+      padding: 10px;
+    }
+  }
+
+  .container-overall {
+    background: #f4f7fb;
+    /* margin: 0;
+      padding: 0; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .analysis-container {
+    background: #ffffff;
+    width: 80%;
+    max-width: 900px;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: 0.3s;
+  }
+
+  .analysis-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  }
+
+  .analysis-container h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #333;
+  }
+
+  #semester-Chart {
+    max-width: 100%;
+  }
+</style>
+{% endblock style %}
+
+{% block body %}
+<nav>
+  <!-- Logo + Company Name -->
+  <div class="brand">
+    <img src="{% static 'photos/College_Logo.jpg' %}" alt="Logo">
+    <span id="blue">Let's </span><span>Progress</span>
+  </div>
+
+  <!-- Hamburger -->
+  <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+    ☰
+  </div>
+
+  <!-- Nav Links -->
+  <ul class="nav-links">
+    <li><a href="/student-dashboard/" class="active">Dashboard</a></li>
+    <li><a href="/leader-board/">Leaderboard</a></li>
+    <li>
+      <div class="profile">
+        <i class="bi bi-person-circle"></i>
+        <span>{{user}}</span>
+      </div>
+    </li>
+    <li><a href="/logout/" class="logout-btn">Logout</a></li>
+  </ul>
+</nav>
+{{test}}
+<div class="dashboard">
+  <div class="card pass">
+    <i class="fa-solid fa-user-check"></i>
+    <h3>Pass</h3>
+    <div class="value">{{result.total_pass}}</div>
+  </div>
+
+  <div class="card fail-subject">
+    <i class="fa-solid fa-user-xmark"></i>
+    <h3>Fail</h3>
+    <div class="value">{{result.total_fail}}</div>
+  </div>
+
+  <div class="card percentage">
+    <i class="fa-solid fa-percent"></i>
+    <h3>Percentage</h3>
+    <div class="value">{{percentage}}%</div>
+  </div>
+
+  <div class="card cgpa">
+    <i class="fa-solid fa-graduation-cap"></i>
+    <h3>CGPA</h3>
+    <div class="value">{{cgpa}}</div>
+  </div>
+</div>
+{% for i in marks %}
+<div class="container semester-container" data-semester="sem{{forloop.counter}}">
+  <h2>Semester {{forloop.counter}}</h2>
+  <div class="table-responsive">
+    <table id="marksTable-sem{{forloop.counter}}" class="marks-table">
+      <thead>
+        <tr>
+          <th>S.No.</th>
+          <th>Subject Name</th>
+          <th>Internal</th>
+          <th>External</th>
+          <th>Total</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for j in i %}
+        <tr>
+          <td>{% if forloop.counter == 1 %}<span class="rank-badge gold">1</span>{% elif forloop.counter == 2 %}<span class="rank-badge silver">2</span>{% elif forloop.counter == 3%}<span class="rank-badge bronze">3</span>{% else %}{{forloop.counter}}{% endif %}</td>
+          <td>{{j.sub.name}}</td>
+          <td>{{j.internal}}</td>
+          <td>{{j.external}}</td>
+          <td class="marks">{{j.total_marks}}</td>
+          {% if j.total_marks < 40 %} <td><span class="badge result-fail">FAIL</span></td>
+            {% else %}
+            <td><span class="badge result-pass">PASS</span></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="summary-chart">
+    <div class="results">
+      <div class="result-box">Total Marks: <span id="totalMarks-sem{{forloop.counter}}"></span> </div>
+      <div class="result-box">Percentage: <span id="percentage-sem{{forloop.counter}}"></span>%</div>
+      <div class="result-box">GPA: <span>{% if forloop.counter0 == 0 %}{{gpa.0}}{% elif forloop.counter0 == 1 %}{{gpa.1}}{% elif forloop.counter0 == 2 %}{{gpa.2}}{% elif forloop.counter0 == 3 %}{{gpa.3}}{% elif forloop.counter0 == 4 %}{{gpa.4}}{% elif forloop.counter0 == 5 %}{{gpa.5}}{% endif %}</span></div>
+    </div>
+    <canvas id="marksChart-sem{{forloop.counter}}" class="doughnut-chart"></canvas>
+  </div>
+</div>
+
+</div>
+{% endfor %}
+{% if fail_subjects %}
+<div class="container fail-subject-container">
+  <h1 id="fail-heading">Failed Subjects</h1>
+  <div class="fail">
+    <table class="fail-table">
+      <thead>
+        <tr>
+          <th>S.No.</th>
+          <th>Semester</th>
+          <th>Subject Name</th>
+          <th>Internal</th>
+          <th>External</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in fail_subjects %}
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{i.sem}}</td>
+          <td>{{i.sub.name}}</td>
+          <td>{{i.internal}}</td>
+          <td class="mark-fail">{{i.external}}</td>
+          <td class="total mark-fail">{{i.total_marks}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+<div class="container-overall">
+  <div class="analysis-container">
+    <h2>Overall Semester Analysis</h2>
+    <canvas id="semesterChart"></canvas>
+  </div>
+</div>
+<script>
+  const semesters = document.querySelectorAll('.semester-container');
+
+  // Arrays to store semester labels and percentages
+  const semesterLabels = [];
+  const semesterPercentages = [];
+
+  semesters.forEach(container => {
+    const semester = container.getAttribute('data-semester');
+    const table = container.querySelector('table');
+    const marksCells = table.querySelectorAll('.marks');
+    const subjects = Array.from(table.querySelectorAll('tbody tr')).map(row => row.children[1].textContent);
+
+    const marksArray = [];
+    let total = 0;
+
+    marksCells.forEach(cell => {
+      const score = parseFloat(cell.textContent);
+      marksArray.push(score);
+      total += score;
+    });
+
+    // Calculate percentage for this semester
+    const percentage = ((total / (subjects.length * 100)) * 100).toFixed(2);
+
+    // Update DOM with total and percentage
+    document.getElementById(`totalMarks-${semester}`).textContent = total;
+    document.getElementById(`percentage-${semester}`).textContent = percentage;
+
+    // Save data for overall analysis
+    semesterLabels.push(`Semester ${semester.replace("sem", "")}`);
+    semesterPercentages.push(parseFloat(percentage));
+
+    // Per-semester Doughnut Chart
+    const ctx = document.getElementById(`marksChart-${semester}`).getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: subjects,
+        datasets: [{
+          data: marksArray,
+          backgroundColor: [
+            '#42A5F5',
+            '#66BB6A',
+            '#FFA726',
+            '#AB47BC',
+            '#FF7043',
+            '#29B6F6'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              usePointStyle: true,
+              padding: 20,
+              font: { size: 14 }
+            }
+          },
+          datalabels: {
+            color: '#fff',
+            font: { weight: 'bold', size: 14 },
+            formatter: (value, ctx) => {
+              let sum = 0;
+              const dataArr = ctx.chart.data.datasets[0].data;
+              dataArr.forEach(data => { sum += data; });
+              return (value * 100 / sum).toFixed(1) + "%";
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+  });
+
+  // === Overall Semester Analysis Line Chart ===
+  const overallCtx = document.getElementById('semesterChart').getContext('2d');
+
+  let gradient = overallCtx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, 'rgba(75, 192, 192, 0.6)');
+  gradient.addColorStop(1, 'rgba(75, 192, 192, 0)');
+
+  new Chart(overallCtx, {
+    type: 'line',
+    data: {
+      labels: semesterLabels,
+      datasets: [{
+        label: 'Percentage (%)',
+        data: semesterPercentages,
+        backgroundColor: gradient,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: 'rgba(75, 192, 192, 1)',
+        pointRadius: 6,
+        pointHoverRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: '#333',
+            font: { size: 14, weight: 'bold' }
+          }
+        },
+        tooltip: {
+          backgroundColor: '#222',
+          titleColor: '#fff',
+          bodyColor: '#eee',
+          borderWidth: 1,
+          borderColor: '#444'
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 100,
+          ticks: { stepSize: 10, color: '#555' },
+          grid: { color: '#eaeaea' }
+        },
+        x: {
+          ticks: { color: '#555' },
+          grid: { color: '#eaeaea' }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock body %}

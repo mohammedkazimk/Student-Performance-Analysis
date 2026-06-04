@@ -1,0 +1,414 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpg" href="{% static 'photos/College_Logo.jpg' %}">
+  <title>Let's Progress | Dashboard</title>
+
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+    }
+
+    nav {
+      width: 100%;
+      background: #fff;
+      /* White background */
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 25px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      /* subtle shadow */
+    }
+
+    /* Logo + Company */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      height: 45px;
+      width: auto;
+    }
+
+    .brand span {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: black;
+      letter-spacing: 0.5px;
+    }
+
+    .brand #blue {
+      color: #096afc;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-left: 25px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1rem;
+      transition: 0.3s;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    .nav-links a:hover {
+      background: #f2f2f2;
+      color: #007bff;
+    }
+
+    /* Profile */
+    .profile {
+      display: flex;
+      align-items: center;
+      margin-left: 25px;
+      transition: 0.3s;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .profile i {
+      font-size: 1.5rem;
+      margin-right: 8px;
+    }
+
+    .logout-btn {
+      color: #666;
+      font-size: 0.95rem;
+      font-weight: normal;
+      opacity: 0.8;
+      border: 1px solid #ddd;
+      padding: 5px 12px;
+      border-radius: 5px;
+      margin-left: 20px;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #f9f9f9;
+      color: #444;
+      opacity: 1;
+    }
+
+
+    /* Hamburger */
+    .menu-toggle {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #333;
+    }
+
+    /* Active tab */
+    .nav-links a.active {
+      color: #007bff;
+      font-weight: 600;
+      border-bottom: 2px solid #007bff;
+      background: #f2f2f2;
+    }
+
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 65px;
+        right: 0;
+        background: #fff;
+        flex-direction: column;
+        width: 220px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links li {
+        margin: 15px 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    body {
+      background: #f4f7fc;
+    }
+
+    .welcome-section {
+      background-color: #f0f2f5;
+      padding: 60px 20px;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      color: #333;
+    }
+
+    .welcome-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+
+    .welcome-text {
+      flex: 1 1 500px;
+      animation: fadeInLeft 1s ease-out;
+    }
+
+    .welcome-text h1 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+    }
+
+    .welcome-text h1 span {
+      color: #096afc;
+    }
+
+    .welcome-text p {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      max-width: 500px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background-color: #096afc;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #2f80fa;
+    }
+
+    /* Image Section */
+    .welcome-image {
+      flex: 1 1 350px;
+      text-align: center;
+      animation: fadeInRight 1s ease-out;
+    }
+
+    .welcome-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .welcome-container {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .welcome-text h1 {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInLeft {
+      0% {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      0% {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Subject Table Section */
+    .subject-table-section {
+      padding: 50px 20px;
+      background-color: #ffffff;
+    }
+
+    .table-container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .table-container h2 {
+      font-size: 2rem;
+      color: #096afc;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .subject-table {
+      width: 100%;
+      border-collapse: collapse;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .subject-table thead {
+      background-color: #096afc;
+      color: #fff;
+    }
+
+    .subject-table th,
+    .subject-table td {
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 1rem;
+    }
+
+    .subject-table tbody tr:nth-child(even) {
+      background-color: #f8faff;
+    }
+
+    .subject-table tbody tr:hover {
+      background-color: #e6f0ff;
+      transition: background 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+
+      .subject-table th,
+      .subject-table td {
+        padding: 12px 10px;
+        font-size: 0.95rem;
+      }
+
+      .table-container h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <!-- Logo + Company Name -->
+    <div class="brand">
+      <img src="{% static 'photos/College_Logo.jpg' %}" alt="Logo">
+      <span id="blue">Let's </span><span>Progress</span>
+    </div>
+
+    <!-- Hamburger -->
+    <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+      ☰
+    </div>
+
+    <!-- Nav Links -->
+    <ul class="nav-links">
+      <li><a href="/staff-dashboard/" class="active">Dashboard</a></li>
+      <li><a href="/student-mark-entry/">Mark Entry</a></li>
+      <li>
+        <div class="profile">
+          <i class="bi bi-person-circle"></i>
+          <span>{{user}}</span>
+        </div>
+      </li>
+      <li><a href="/logout/" class="logout-btn">Logout</a></li>
+    </ul>
+  </nav>
+
+  <section class="welcome-section">
+    <div class="welcome-container">
+      <div class="welcome-text">
+        <h1>Welcome back, <span>{{user}}</span></h1>
+        <p>We’re glad to have you on the dashboard. Let’s make today productive and impactful.</p>
+        <a href="#your-subjects" class="btn-primary">View Your Subjects</a>
+      </div>
+      <div class="welcome-image">
+        <img src="{% static 'photos/welcome.png' %}"
+          alt="Teacher Welcome" />
+      </div>
+    </div>
+  </section>
+
+  <section class="subject-table-section" id="your-subjects">
+    <div class="table-container">
+      <h2>Your Assigned Subjects</h2>
+      <table class="subject-table">
+        <thead>
+          <tr>
+            <th>S.No.</th>
+            <th>Subject Code</th>
+            <th>Subject</th>
+            <th>Class</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sub in subjects %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{sub.code}}</td>
+            <td>{{sub.name}}</td>
+            <td>
+              {% if sub.semester == 1 or sub.semester == 2 %}
+              I
+              {% elif sub.semester == 2 or sub.semester == 3 %}
+              II
+              {% elif sub.semester == 4 or sub.semester == 5 %}
+              III
+              {% endif %}
+              {{sub.course}}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+</body>
+
+</html>

@@ -1,0 +1,494 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/jpg" href="{% static 'photos/College_Logo.jpg' %}">
+    <title>Student Mark Entry</title>
+
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        nav {
+            width: 100%;
+            background: #fff;
+            /* White background */
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 25px;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            /* subtle shadow */
+        }
+
+        /* Logo + Company */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand img {
+            height: 45px;
+            width: auto;
+        }
+
+        .brand span {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: black;
+            letter-spacing: 0.5px;
+        }
+
+        .brand #blue {
+            color: #096afc;
+        }
+
+        /* Nav links */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1rem;
+            transition: 0.3s;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            background: #f2f2f2;
+            color: #007bff;
+        }
+
+        /* Profile */
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-left: 25px;
+            transition: 0.3s;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .profile i {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        .logout-btn {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: normal;
+            opacity: 0.8;
+            border: 1px solid #ddd;
+            padding: 5px 12px;
+            border-radius: 5px;
+            margin-left: 20px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #f9f9f9;
+            color: #444;
+            opacity: 1;
+        }
+
+
+        /* Hamburger */
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Active tab */
+        .nav-links a.active {
+            color: #007bff;
+            font-weight: 600;
+            border-bottom: 2px solid #007bff;
+            background: #f2f2f2;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 65px;
+                right: 0;
+                background: #fff;
+                flex-direction: column;
+                width: 220px;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 15px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        body {
+            background: #f4f7fc;
+        }
+
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            margin: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            select,
+            button {
+                flex: 1;
+            }
+        }
+
+        .semester {
+            margin: 20px;
+            overflow-x: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th,
+        td {
+            text-align: center;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: #f1f7ff;
+        }
+
+        /* Mark input styling */
+        .mark-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .mark-input input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .mark-input input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+        }
+
+        /* Checkbox styling */
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            cursor: pointer;
+            accent-color: #007bff;
+            /* Modern browsers */
+        }
+
+        /* Save button */
+        .save-btn {
+            display: block;
+            margin: 20px auto 0;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .save-btn:hover {
+            background: linear-gradient(135deg, #0056b3, #003d80);
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+
+            th,
+            td {
+                padding: 10px 8px;
+                font-size: 14px;
+            }
+
+            .mark-input input {
+                width: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table {
+                font-size: 13px;
+                min-width: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <!-- Logo + Company Name -->
+        <div class="brand">
+            <img src="{% static 'photos/College_Logo.jpg' %}" alt="Logo">
+            <span id="blue">Let's </span><span>Progress</span>
+        </div>
+
+        <!-- Hamburger -->
+        <div class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+            ☰
+        </div>
+
+        <!-- Nav Links -->
+        <ul class="nav-links">
+            <li><a href="/staff-dashboard/">Dashboard</a></li>
+            <li><a href="/student-mark-entry/" class="active">Mark Entry</a></li>
+            <li>
+                <div class="profile">
+                    <i class="bi bi-person-circle"></i>
+                    <span>{{user}}</span>
+                </div>
+            </li>
+            <li>
+                <a href="/logout/" class="logout-btn">Logout</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+        <form class="form-container" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select name="subject" id="subject">
+                    <option hidden>Select Subject</option>
+                    {% for sub in subject %}
+                    <option value="{{sub.id}}" {% if sub.id == disp.sub %}selected{% endif %}>{{sub|title}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="class">Class</label>
+                <select name="class" id="class">
+                    <option {% if disp %}value="{{disp.year}}"{% endif %} hidden>{% if disp %}{{disp.class}} {{class}}{% else %}Select Class{% endif %}</option>
+                    <option value="1">I {{class}}</option>
+                    <option value="2">II {{class}}</option>
+                    <option value="3">III {{class}}</option>
+                </select>
+            </div>
+            <button type="submit" name="form_type" value="search">Search</button>
+        </form>
+    </div>
+
+    {% if students %}
+    <div class="semester">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="sub_id" value="{{disp.sub}}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No.</th>
+                        <th>Name</th>
+                        <th>Internal</th>
+                        <th>External</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for student in students %}
+                        <input type="hidden" name="stu_ids" value="{{student.stu.id}}">
+                        <td>{{student.stu.rollno}}</td>
+                        <td>{{student.stu.name}}</td>
+                        <td>
+                            <div class="mark-input">
+                                <input type="number" name="inter_{{student.stu.id}}" min="0" max="25" {% if student.internal == 0 %} placeholder="0" {% else %} value="{{student.internal}}" {% endif %}> / 25
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mark-input">
+                                <input type="number" name="exter_{{student.stu.id}}" min="0" max="75" {% if student.external == 0 %} placeholder="0" {% else %} value="{{student.external}}" {% endif %} > / 75
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" name="form_type" value="semester" class="save-btn">Submit</button>
+        </form>
+    </div>
+{% endif %}
+
+</body>
+
+</html>
+
+
+<!-- <div class="form-group">
+                <label for="exam">Exam</label>
+                <select name="exam" id="exam">
+                    <option {% if display %}value="{{display.exam_val}}"{% endif %} selected hidden>{% if display %}{{display.exam}}{% else %}Select Exam{% endif %}
+                    </option>
+                    <option value="1sem1">1 Sem CIA-I</option>
+                    <option value="1sem2">1 Sem CIA-II</option>
+                    <option value="1sem3">1 Sem CIA-III</option>
+                    <option value="1sem">1 Semester</option>
+                    <option value="2sem1">2 Sem CIA-I</option>
+                    <option value="2sem2">2 Sem CIA-II</option>
+                    <option value="2sem3">2 Sem CIA-III</option>
+                    <option value="2sem">2 Semester</option>
+                    <option value="3sem1">3 Sem CIA-I</option>
+                    <option value="3sem2">3 Sem CIA-II</option>
+                    <option value="3sem3">3 Sem CIA-III</option>
+                    <option value="3sem">3 Semester</option>
+                    <option value="4sem1">4 Sem CIA-I</option>
+                    <option value="4sem2">4 Sem CIA-II</option>
+                    <option value="4sem3">4 Sem CIA-III</option>
+                    <option value="4sem">4 Semester</option>
+                    <option value="5sem1">5 Sem CIA-I</option>
+                    <option value="5sem2">5 Sem CIA-II</option>
+                    <option value="5sem3">5 Sem CIA-III</option>
+                    <option value="5sem">5 Semester</option>
+                    <option value="6sem1">6 Sem CIA-I</option>
+                    <option value="6sem2">6 Sem CIA-II</option>
+                    <option value="6sem3">6 Sem CIA-III</option>
+                    <option value="6sem">6 Semester</option>
+                </select>
+            </div> -->
