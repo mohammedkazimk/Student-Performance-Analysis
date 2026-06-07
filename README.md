@@ -84,7 +84,6 @@ The system turns raw marks into meaningful insights through charts, tables, and 
 - Staff dashboard for mark entry
 - Admin dashboard for student, staff, subject, and mark management
 - Leaderboard based on performance
-- Responsive UI for better viewing on desktop and mobile
 
 ## Tech Stack
 
