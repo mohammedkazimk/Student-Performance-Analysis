@@ -11,8 +11,16 @@
 
 ---
 
-> **Frontend note:** This project is fully powered by the backend logic in Django.  
-> The frontend was created with AI-assisted support to keep the UI clean, modern, and presentation-ready.
+> **Backend Focus:** This project was fully designed and developed on the backend using Django. All core functionalities, business logic, authentication, role-based access control, database design, analytics, and performance calculations were implemented from scratch in Django. The frontend is used only as a presentation layer for interacting with the backend features.
+
+## 🌐 Live Demo
+
+🔗 **Website:** https://performanceanalysis.pythonanywhere.com/
+
+Explore the application using the demo credentials provided below.
+
+> Note: The project showcases three user roles — Admin, Staff, and Student — each with dedicated dashboards and permissions.
+
 
 ## Demo Access
 
